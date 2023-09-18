@@ -175,7 +175,7 @@ void checkArchive()
 
         baseDatos << "Name,ID,Category,Size,Price,LicenciasDisponibles,LicenciasVendidas,Imagen" << endl;
 
-        baseDatos << "Dont Satve,DS001,Aventura,1GB,4.99,100,50,Image1.jpg" << endl;
+        baseDatos << "Dont Starve,DS001,Aventura,1GB,4.99,100,50,Image1.jpg" << endl;
         baseDatos << "Starfield,SF002,Rol,125GB,59.99,200,100,Image2.jpg" << endl;
         baseDatos << "The Legend of Zelda: Breath of the Wild,ZL003,Aventura,13.4GB,59.99,500,250,Image3.jpg" << endl;
         baseDatos << "Red Dead Redemption 2,RD004,Acción,105GB,49.99,400,200,Image4.jpg" << endl;
