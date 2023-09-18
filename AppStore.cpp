@@ -235,15 +235,15 @@ void checkArchive()
     {
         baseDatos.open("Base_Datos_AppStore.txt", ios::out);
 
-        baseDatos << "Name,ID,Category,Size,Price,LicenciasDisponibles,LicenciasVendidas,Imagen" << endl;
+        baseDatos << "Name,ID,Category,Size,Price,LicenciasDisponibles,LicenciasVendidas,Imagen,Sales" << endl;
 
-        baseDatos << "Dont Satve,DS001,Aventura,1GB,4.99,100,50,Image1.jpg" << endl;
-        baseDatos << "Starfield,SF002,Rol,125GB,59.99,200,100,Image2.jpg" << endl;
-        baseDatos << "The Legend of Zelda: Breath of the Wild,ZL003,Aventura,13.4GB,59.99,500,250,Image3.jpg" << endl;
-        baseDatos << "Red Dead Redemption 2,RD004,Acción,105GB,49.99,400,200,Image4.jpg" << endl;
-        baseDatos << "The Elder Scrolls V: Skyrim,TS005,RPG,25GB,19.99,600,300,Image5.jpg" << endl;
-        baseDatos << "Cyber Shadow,CS006,Plataforma,1GB,14.99,100,50,Image6.jpg" << endl;
-        baseDatos << "Outer Worlds 2,OW007,RPG,35GB,49.99,400,200,Image7.jpg" << endl;
+        baseDatos << "Dont Satve,DS001,Aventura,1GB,4.99,100,50,Image1.jpg,0" << endl;
+        baseDatos << "Starfield,SF002,Rol,125GB,59.99,200,100,Image2.jpg,0" << endl;
+        baseDatos << "The Legend of Zelda: Breath of the Wild,ZL003,Aventura,13.4GB,59.99,500,250,Image3.jpg,0" << endl;
+        baseDatos << "Red Dead Redemption 2,RD004,Acción,105GB,49.99,400,200,Image4.jpg,0" << endl;
+        baseDatos << "The Elder Scrolls V: Skyrim,TS005,RPG,25GB,19.99,600,300,Image5.jpg,0" << endl;
+        baseDatos << "Cyber Shadow,CS006,Plataforma,1GB,14.99,100,50,Image6.jpg,0" << endl;
+        baseDatos << "Outer Worlds 2,OW007,RPG,35GB,49.99,400,200,Image7.jpg,0" << endl;
 
 
         baseDatos.close();
