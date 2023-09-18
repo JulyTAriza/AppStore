@@ -8,10 +8,11 @@
 using namespace std;
 
 vector<vector<string>> content;
+vector<vector<string>> passwordsVector;
 vector<string> row;
 string line, word;
 
-int optionMenu, inputPassword, passwordAux, password[2], limitShow;
+int optionMenu, inputPassword, passwordAux, password[2], limitShow, sales, salesAUX;
 string spacesToPrint;
 char uSure;
 
@@ -30,6 +31,8 @@ class game
 void showGames();
 void menuUser();
 void menuAdmin();
+    void menuSales();
+    void menuTopSales();
 void menuDeveloper();
 
 void checkArchive();
@@ -137,6 +140,32 @@ void menuAdmin()
             break;
 
         case 3:
+            do
+            {
+                cout<<"--- --- ---  Ventas  --- --- ---"<<endl<<endl;
+                cout<<"1. Ventas Totales"<<endl;
+                cout<<"2. Top Juegos"<<endl;
+                cout<<"0. Salir del menu VENTAS"<<endl;
+                cin>>optionMenu;
+                optionFail();
+                switch (optionMenu)
+                {
+                    case 1:
+                        menuSales();
+                        optionMenu = 7;
+                        break;
+                    case 2:
+                        menuTopSales();
+                        optionMenu = 7;
+                        break;
+                    case 0:
+                        optionMenu = 7;
+                        break;
+                    default:
+                        cout<<"Esa opcion no esta disponible"<<endl;
+                        break;
+                }
+            } while (optionMenu!=7);
             break;
 
         case 0:
@@ -147,6 +176,39 @@ void menuAdmin()
         }
     } while (optionMenu!=0);
 }
+    void menuSales()
+    {
+        do
+        {
+            cout<<"--- --- ---  Ventas Totales  --- --- ---"<<endl<<endl;
+            for (int j = 1; j < content[0].size(); j++)
+            {
+                std::string::size_type sz;
+                salesAUX = stoi(content[8][j], &sz);
+                sales = sales + salesAUX;
+            }
+            cout <<"El total de las ventas es de: $"<<sales<<endl<<endl;
+            sales = 0;
+            
+            cout<<"0. Salir de Ventas Totales"<<endl;
+            cin>>optionMenu;
+            optionFail();
+            switch (optionMenu)
+            {
+                case 0:
+                    optionMenu=7;
+                    break;
+                default:
+                    cout<<"Esa opcion no esta disponible"<<endl;
+                    break;
+            }
+        } while (optionMenu!=7);
+        
+    }
+    void menuTopSales()
+    {
+
+    }
 void menuDeveloper()
 {
     cout<<"Hello World Developer"<<endl;
@@ -199,11 +261,47 @@ void checkArchive()
     }
 
     baseDatos.close();
+    
+	fstream basePasswords("Passwords.txt", ios::in);
+    if (basePasswords.is_open())
+    {
+        while (getline(basePasswords, line))
+        {
+            row.clear();
 
+            stringstream str(line);
+
+            while (getline(str, word, ','))
+                row.push_back(word);
+            	passwordsVector.push_back(row);
+        }
+    }
+    else
+    {
+        basePasswords.open("Passwords.txt", ios::out);
+
+        basePasswords <<"Passwords,0,0,\n";
+
+        basePasswords.close();
+        fstream basePasswords("Passwords.txt", ios::in);
+
+        while (getline(basePasswords, line))
+        {
+            row.clear();
+
+            stringstream str(line);
+
+            while (getline(str, word, ','))
+                row.push_back(word);
+            	passwordsVector.push_back(row);
+        }
+    }
+
+    basePasswords.close();
     std::string::size_type sz;
-	passwordAux = stoi(content[8][1], &sz);
+	passwordAux = stoi(passwordsVector[0][1], &sz);
 	password[0] = passwordAux;
-	passwordAux = stoi(content[8][2], &sz);
+	passwordAux = stoi(passwordsVector[0][2], &sz);
 	password[1] = passwordAux;
 
 }
