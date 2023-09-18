@@ -13,6 +13,19 @@ string line, word;
 
 int optionMenu, inputPassword, passwordAux, password[2], limitShow;
 string spacesToPrint;
+char uSure;
+
+class game
+{
+    public:
+        string name;
+        string category;
+        unsigned int id;
+        unsigned int price;
+        unsigned int size;
+        unsigned int totalLicencias;
+        unsigned int licenciasVendidas;
+};
 
 void showGames();
 void menuUser();
@@ -28,7 +41,7 @@ int main() {
     checkArchive();
     do
     {
-        cout<<"--- --- ---  UAN MIST/VAPE/HAZE/FOG STORE  --- --- ---"<<endl<<endl; //Todos los nombres son sinonimos de Steam, por temas de copyright
+        cout<<"--- --- ---  UAN MIST/HAZE/FOG STORE  --- --- ---"<<endl<<endl; //Todos los nombres son sinonimos de Steam, por temas de copyright
         cout<<"1. Usuario"<<endl;  
         cout<<"2. Administrador"<<endl;
         cout<<"3. Developer"<<endl;
@@ -40,6 +53,7 @@ int main() {
         {
         case 1:
             menuUser();
+            optionMenu=7;
             break;
         case 2:
             cout<<endl<<"Ingrese la contraseña"<<endl;
@@ -52,6 +66,7 @@ int main() {
             {
                 cout<<"Contraseña Erronea"<<endl;
             }
+            optionMenu=7;
             break;
 
         case 3:
@@ -65,9 +80,23 @@ int main() {
             {
                 cout<<"Contraseña Erronea"<<endl;
             }
+            optionMenu=7;
             break;
 
         case 0:
+            cout << "Quiere cerrar el programa? - s/n" << endl;
+            cin >> uSure;
+            if (uSure == 's' || uSure == 'S')
+            {
+                rewriteArchive();
+                break;
+            }
+            else
+            {
+                optionMenu = 7;
+                system("clear");
+                break;
+            }
             break;
 
         default:
@@ -89,11 +118,39 @@ void menuUser()
 }
 void menuAdmin()
 {
-    cout<<"Hello World Admin"<<endl;
+    do
+    {
+        cout<<"--- --- ---  Bienvenido Admin  --- --- ---"<<endl<<endl;
+        cout<<"1. Comprar licencias"<<endl; //No hay mucho que explicar...
+        cout<<"2. Catalogo de Juegos"<<endl; //Selecciòn de juegos para vender - dice cantidad de licencias de cada juego
+        cout<<"3. Ventas"<<endl; //Cantidad de ventas totales, puede ver el top de juegos vendidos
+        cout<<"0. Salir de Admin"<<endl;
+        cin>>optionMenu;
+        optionFail();
+        switch (optionMenu)
+        {
+        case 1:
+            //Abre catalogo de juegos, publicados por el developer
+            break;
+        case 2:
+            //Abre catalgo de juegos ya comprados - de juegos de los que tiene licencia, si se acaban las licencias se va del caatalogo?
+            break;
+
+        case 3:
+            break;
+
+        case 0:
+            break;
+        default:
+            cout<<"Esa opcion no esta disponible"<<endl;
+            break;
+        }
+    } while (optionMenu!=0);
 }
 void menuDeveloper()
 {
     cout<<"Hello World Developer"<<endl;
+    //dar la opción de poder subir sus juegos a un catalogo
 }
 
 void checkArchive()
@@ -148,6 +205,7 @@ void checkArchive()
 	password[0] = passwordAux;
 	passwordAux = stoi(content[8][2], &sz);
 	password[1] = passwordAux;
+
 }
 void rewriteArchive()
 {
