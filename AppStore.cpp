@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <bits/stdc++.h>
 using namespace std;
 
 vector<vector<string>> content;
@@ -20,12 +21,14 @@ class game
 {
     public:
         string name;
-        string category;
         unsigned int id;
-        unsigned int price;
+        string category;
         unsigned int size;
-        unsigned int totalLicencias;
+        unsigned int price;
+        unsigned int licenciasDisponibles;
         unsigned int licenciasVendidas;
+        unsigned int imagen;
+        unsigned int sales;
 };
 
 void showGames();
@@ -181,10 +184,10 @@ void menuAdmin()
         do
         {
             cout<<"--- --- ---  Ventas Totales  --- --- ---"<<endl<<endl;
-            for (int j = 1; j < content[0].size(); j++)
+            for (int j = 1; j < content.size(); j++)
             {
                 std::string::size_type sz;
-                salesAUX = stoi(content[8][j], &sz);
+                salesAUX = stoi(content[j][8], &sz);
                 sales = sales + salesAUX;
             }
             cout <<"El total de las ventas es de: $"<<sales<<endl<<endl;
@@ -207,7 +210,23 @@ void menuAdmin()
     }
     void menuTopSales()
     {
-
+        do
+        {
+            cout<<"--- --- ---  Top Juegos Vendidos  --- --- ---"<<endl<<endl;
+            //sort(content.begin(), content.end(), greater<int>());
+            cout<<"0. Salir de Top Juegos"<<endl;
+            cin>>optionMenu;
+            optionFail();
+            switch (optionMenu)
+            {
+                case 0:
+                    optionMenu=7;
+                    break;
+                default:
+                    cout<<"Esa opcion no esta disponible"<<endl;
+                    break;
+            }
+        } while (optionMenu!=7);
     }
 void menuDeveloper()
 {
