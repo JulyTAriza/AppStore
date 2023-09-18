@@ -21,7 +21,7 @@ class game
 {
     public:
         string name;
-        unsigned int id;
+        string id;
         string category;
         unsigned int size;
         unsigned int price;
