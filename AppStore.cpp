@@ -13,23 +13,26 @@ vector<vector<string>> passwordsVector;
 vector<string> row;
 string line, word;
 
-int optionMenu, inputPassword, passwordAux, password[2], limitShow, sales, salesAUX;
+int optionMenu, inputPassword, passwordAux, password[2], limitShow;
+float sales, salesAUX;
 string spacesToPrint;
 char uSure;
+const char LIMIT = ',';
 
-class game
+class Game
 {
     public:
         string name;
         string id;
         string category;
-        unsigned int size;
-        unsigned int price;
+        string size;
+        float price;
         unsigned int licenciasDisponibles;
         unsigned int licenciasVendidas;
-        unsigned int imagen;
-        unsigned int sales;
+        string imagen;
 };
+vector<Game> games;
+Game videoGame;
 
 void showGames();
 void menuUser();
@@ -94,7 +97,7 @@ int main() {
             cin >> uSure;
             if (uSure == 's' || uSure == 'S')
             {
-                rewriteArchive();
+                //rewriteArchive();
                 break;
             }
             else
@@ -116,11 +119,16 @@ int main() {
 
 void showGames()
 {
-
+    for (int i = 0; i < games.size(); i++)
+        {
+            Game videoGame = games.at(i);
+            cout << "Tenemos el juego " << videoGame.name << " con ID " << videoGame.id << "\n";
+        }//Pendiente de mostrar más info
 }
 void menuUser()
 {
     cout<<"Hello World User"<<endl;
+    showGames();
 }
 void menuAdmin()
 {
@@ -184,10 +192,10 @@ void menuAdmin()
         do
         {
             cout<<"--- --- ---  Ventas Totales  --- --- ---"<<endl<<endl;
-            for (int j = 1; j < content.size(); j++)
+            for (int i = 0; i < games.size(); i++)
             {
-                std::string::size_type sz;
-                salesAUX = stoi(content[j][8], &sz);
+                videoGame = games[i];
+                salesAUX = videoGame.price * videoGame.licenciasVendidas;
                 sales = sales + salesAUX;
             }
             cout <<"El total de las ventas es de: $"<<sales<<endl<<endl;
@@ -239,45 +247,68 @@ void checkArchive()
 	fstream baseDatos("Base_Datos_AppStore.txt", ios::in);
     if (baseDatos.is_open())
     {
-        while (getline(baseDatos, line))
-        {
-            row.clear();
-
-            stringstream str(line);
-
-            while (getline(str, word, ','))
-                row.push_back(word);
-            	content.push_back(row);
-        }
+        string linea, name, id, category, size, price, licenciasDisponibles, licenciasVendidas, imagen, sales;
+    	while (getline(baseDatos, linea))
+    	{
+    		stringstream input_stringstream(linea);
+    		getline(input_stringstream, name, LIMIT);
+    		getline(input_stringstream, id, LIMIT);
+    		getline(input_stringstream, category, LIMIT);
+    		getline(input_stringstream, size, LIMIT);
+    		getline(input_stringstream, price, LIMIT);
+    		getline(input_stringstream, licenciasDisponibles, LIMIT);
+    		getline(input_stringstream, licenciasVendidas, LIMIT);
+    		getline(input_stringstream, imagen, LIMIT);
+    		videoGame.name = name;
+    		videoGame.id = id;
+    		videoGame.category = category;
+    		videoGame.size = size;
+    		videoGame.price = stof(price);
+    		videoGame.licenciasDisponibles = stoi(licenciasDisponibles);
+    		videoGame.licenciasVendidas = stoi(licenciasVendidas);
+    		videoGame.imagen = imagen;
+    		
+    		games.push_back(videoGame);
+    	}
     }
     else
     {
         baseDatos.open("Base_Datos_AppStore.txt", ios::out);
 
-        baseDatos << "Name,ID,Category,Size,Price,LicenciasDisponibles,LicenciasVendidas,Imagen,Sales" << endl;
-
-        baseDatos << "Dont Satve,DS001,Aventura,1GB,4.99,100,50,Image1.jpg,0" << endl;
-        baseDatos << "Starfield,SF002,Rol,125GB,59.99,200,100,Image2.jpg,0" << endl;
-        baseDatos << "The Legend of Zelda: Breath of the Wild,ZL003,Aventura,13.4GB,59.99,500,250,Image3.jpg,0" << endl;
-        baseDatos << "Red Dead Redemption 2,RD004,Acción,105GB,49.99,400,200,Image4.jpg,0" << endl;
-        baseDatos << "The Elder Scrolls V: Skyrim,TS005,RPG,25GB,19.99,600,300,Image5.jpg,0" << endl;
-        baseDatos << "Cyber Shadow,CS006,Plataforma,1GB,14.99,100,50,Image6.jpg,0" << endl;
-        baseDatos << "Outer Worlds 2,OW007,RPG,35GB,49.99,400,200,Image7.jpg,0" << endl;
-
+        //baseDatos << "Name,ID,Category,Size,Price,LicenciasDisponibles,LicenciasVendidas,Imagen" << endl;
+        baseDatos << "Dont Satve,DS001,Aventura,1GB,4.99,100,50,Image1.jpg" << endl;
+        baseDatos << "Starfield,SF002,Rol,125GB,59.99,200,100,Image2.jpg" << endl;
+        baseDatos << "The Legend of Zelda: Breath of the Wild,ZL003,Aventura,13.4GB,59.99,500,250,Image3.jpg" << endl;
+        baseDatos << "Red Dead Redemption 2,RD004,Acción,105GB,49.99,400,200,Image4.jpg" << endl;
+        baseDatos << "The Elder Scrolls V: Skyrim,TS005,RPG,25GB,19.99,600,300,Image5.jpg" << endl;
+        baseDatos << "Cyber Shadow,CS006,Plataforma,1GB,14.99,100,50,Image6.jpg" << endl;
+        baseDatos << "Outer Worlds 2,OW007,RPG,35GB,49.99,400,200,Image7.jpg" << endl;
 
         baseDatos.close();
         fstream baseDatos("Base_Datos_AppStore.txt", ios::in);
-
-        while (getline(baseDatos, line))
-        {
-            row.clear();
-
-            stringstream str(line);
-
-            while (getline(str, word, ','))
-                row.push_back(word);
-            	content.push_back(row);
-        }
+        string linea, name, id, category, size, price, licenciasDisponibles, licenciasVendidas, imagen, sales;
+        while (getline(baseDatos, linea))
+    	{
+    		stringstream input_stringstream(linea);
+    		getline(input_stringstream, name, LIMIT);
+    		getline(input_stringstream, id, LIMIT);
+    		getline(input_stringstream, category, LIMIT);
+    		getline(input_stringstream, size, LIMIT);
+    		getline(input_stringstream, price, LIMIT);
+    		getline(input_stringstream, licenciasDisponibles, LIMIT);
+    		getline(input_stringstream, licenciasVendidas, LIMIT);
+    		getline(input_stringstream, imagen, LIMIT);
+    		videoGame.name = name;
+    		videoGame.id = id;
+    		videoGame.category = category;
+    		videoGame.size = size;
+    		videoGame.price = stof(price);
+    		videoGame.licenciasDisponibles = stoi(licenciasDisponibles);
+    		videoGame.licenciasVendidas = stoi(licenciasVendidas);
+    		videoGame.imagen = imagen;
+    		
+    		games.push_back(videoGame);
+    	}
     }
 
     baseDatos.close();
