@@ -30,13 +30,16 @@ class Game
         unsigned int licenciasDisponibles;
         unsigned int licenciasVendidas;
         string imagen;
+        bool compradoPorUsuario;
+        Game() : compradoPorUsuario(false) {}
 };
 vector<Game> games;
 Game videoGame;
 
-void showGames();
 void menuUser();
+    void showGames();
 void menuAdmin();
+    void menuComprar();
     void menuSales();
     void menuTopSales();
 void menuDeveloper();
@@ -117,19 +120,18 @@ int main() {
     return 0;
 }
 
-void showGames()
-{
-    for (int i = 0; i < games.size(); i++)
-        {
-            Game videoGame = games.at(i);
-            cout << "Tenemos el juego " << videoGame.name << " con ID " << videoGame.id << "\n";
-        }//Pendiente de mostrar más info
-}
 void menuUser()
 {
     cout<<"Hello World User"<<endl;
     showGames();
 }
+    void showGames()
+    {
+        cout << "Lista de juegos disponibles:" << endl;
+        for (int i = 0; i < games.size(); i++){
+            cout << i + 1 << ". " << games[i].name << " (ID: " << games[i].id << ")" << endl;
+        }
+    }
 void menuAdmin()
 {
     do
@@ -187,6 +189,48 @@ void menuAdmin()
         }
     } while (optionMenu!=0);
 }
+    void menuComprar()
+    {
+        cout << "--- --- ---  Comprar Licencias  --- --- ---" << endl << endl;
+        cout << "Lista de juegos disponibles para comprar:" << endl;
+
+        for (int i = 0; i < games.size(); i++)
+        {
+            Game& currentGame = games[i];
+            cout << i + 1 << ". " << currentGame.name << " (ID: " << currentGame.id << ")" << endl;
+        }
+
+        int gameChoice;
+        cout << "Seleccione el juego que desea comprar (ingrese el número): ";
+        cin >> gameChoice;
+
+        // Verificar si la elección está dentro del rango válido
+        if (gameChoice >= 1 && gameChoice <= games.size())
+        {
+            Game& selectedGame = games[gameChoice - 1];
+
+            if (selectedGame.licenciasDisponibles > 0)
+            {
+                // Realizar la compra
+                selectedGame.licenciasVendidas++;
+                selectedGame.licenciasDisponibles--;
+
+                cout << "Licencia comprada con éxito para el juego: " << selectedGame.name << endl;
+            }
+            else
+            {
+                cout << "No quedan licencias disponibles para el juego seleccionado." << endl;
+            }
+        }
+        else
+        {
+            cout << "Opción no válida. Por favor, seleccione un número de juego válido." << endl;
+        }
+
+        cout << "Presione Enter para continuar...";
+        cin.ignore(); // Limpiar el búfer de entrada
+        cin.get();    // Esperar a que el usuario presione Enter
+    }
     void menuSales()
     {
         do
