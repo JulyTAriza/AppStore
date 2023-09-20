@@ -146,7 +146,7 @@ void menuAdmin()
         switch (optionMenu)
         {
         case 1:
-            //Abre catalogo de juegos, publicados por el developer
+            menuComprar();
             break;
         case 2:
             //Abre catalgo de juegos ya comprados - de juegos de los que tiene licencia, si se acaban las licencias se va del caatalogo?
