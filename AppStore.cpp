@@ -29,6 +29,7 @@ class Game
         float price;
         unsigned int licenciasDisponibles;
         unsigned int licenciasVendidas;
+        string secretDeveloperID;
         string imagen;
 };
 vector<Game> games;
@@ -37,14 +38,21 @@ Game videoGame;
 void showGames();
 void menuUser();
 void menuAdmin();
+void menuDeveloper();
     void menuSales();
     void menuTopSales();
-void menuDeveloper();
 
 void checkArchive();
 void rewriteArchive();
 void optionFail();
 /*void checkUpper();*/
+
+//Developer Functions
+void uploadGame();
+void editVideogameInformation();
+void uploadGameUpdates();
+void viewGameSales();
+void generateUniqueID();
 
 int main() {
     checkArchive();
@@ -239,8 +247,113 @@ void menuAdmin()
 void menuDeveloper()
 {
     cout<<"Hello World Developer"<<endl;
-    //dar la opción de poder subir sus juegos a un catalogo
+    int developerOption;
+    do{
+        cout << "--- --- ---  Menú de Desarrollador  --- --- ---" << endl << endl;
+        cout << "1. Subir un juego" << endl;
+        cout << "2. Editar información de un juego" << endl;
+        cout << "3. Subir actualizaciones de un juego" << endl;
+        cout << "4. Ver cuántos juegos has vendido" << endl;
+        cout << "0. Salir del Menú de Desarrollador" << endl;
+        cin >> developerOption;
+        optionFail();
+
+            switch (developerOption)
+            {
+            case 1:
+                uploadGame();
+                break;
+            case 2:
+                editVideogameInformation();
+                break;
+            case 3:
+                uploadGameUpdates();
+                break;
+            case 4:
+                viewGameSales();
+                break;
+            case 0:
+
+                break;
+            default:
+                cout << "That option is not available" << endl;
+                break;
+            }
+        } while (developerOption != 0);
 }
+
+void generateUniqueID(Game &newGame)
+{
+    mt19937 rng(static_cast<unsigned int>(time(nullptr)));
+
+    uniform_int_distribution<int> dist(1000, 9999); // Rango de ID
+
+    int uniqueID = dist(rng);
+
+    newGame.id = to_string(uniqueID);
+    cout << "La ID designada es: " << newGame.id << endl;
+}
+
+void uploadGame()
+{
+    Game newGame;
+
+    cout << "Ingrese el nombre del juego: ";
+    cin.ignore();
+    getline(cin, newGame.name);
+
+    cout << "Ingrese la categoría del juego (Rompecabezas, acción o deporte): ";
+    getline(cin, newGame.category);
+
+    cout << "Ingrese el tamaño del juego: ";
+    cin >> newGame.size;
+
+    cout << "Ingrese el precio del juego: ";
+    cin >> newGame.price;
+
+    cout << "Ingrese la cantidad de licencias disponibles: ";
+    cin >> newGame.licenciasDisponibles;
+
+    newGame.licenciasVendidas = 0;
+
+    cout << "Ingrese el nombre del archivo de imagen del juego: ";
+    cin.ignore();
+    getline(cin, newGame.imagen);
+
+    // Generar la ID única y asignarla al juego
+    generateUniqueID(newGame);
+
+    games.push_back(newGame);
+
+    ofstream baseDatos("Base_Datos_AppStore.txt", ios::app);
+    if (baseDatos.is_open())
+    {
+        baseDatos << newGame.name << "," << newGame.id << "," << newGame.category << ","
+                    << newGame.size << "," << newGame.price << ","
+                    << newGame.licenciasDisponibles << "," << newGame.licenciasVendidas << ","
+                    << newGame.imagen << endl;
+
+        baseDatos.close();
+        cout << "El juego se ha cargado exitosamente en la base de datos." << endl;
+    }
+    else
+    {
+        cout << "Error al abrir el archivo de base de datos." << endl;
+    }
+}
+
+void editVideogameInformation(){
+
+}
+
+void uploadGameUpdates(){
+
+}
+
+void viewGameSales(){
+
+}
+
 
 void checkArchive()
 {
