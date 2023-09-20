@@ -49,10 +49,13 @@ void optionFail();
 
 //Developer Functions
 void uploadGame();
+void updateGameInDatabase();
+void editGameInformationInMemory();
 void editVideogameInformation();
 void uploadGameUpdates();
 void viewGameSales();
 void generateUniqueID();
+void displayGameInformation();
 
 int main() {
     checkArchive();
@@ -342,9 +345,140 @@ void uploadGame()
     }
 }
 
-void editVideogameInformation(){
-
+void displayGameInformation(const Game &game)
+{
+    cout << "Información actual del juego:" << endl;
+    cout << "Nombre: " << game.name << endl;
+    cout << "Categoría: " << game.category << endl;
+    cout << "Tamaño: " << game.size << endl;
+    cout << "Precio: " << game.price << endl;
+    cout << "Licencias Disponibles: " << game.licenciasDisponibles << endl;
+    cout << "Licencias Vendidas: " << game.licenciasVendidas << endl;
+    cout << "Imagen: " << game.imagen << endl;
 }
+
+
+// Función para editar la información de un juego en la base de datos
+void updateGameInDatabase(const Game &gameToUpdate)
+{
+    ofstream baseDatos("Base_Datos_AppStore.txt");
+    if (baseDatos.is_open())
+    {
+        for (const Game &game : games)
+        {
+            baseDatos << game.name << "," << game.id << "," << game.category << ","
+                      << game.size << "," << game.price << ","
+                      << game.licenciasDisponibles << "," << game.licenciasVendidas << ","
+                      << game.imagen << endl;
+        }
+        baseDatos.close();
+    }
+    else
+    {
+        cout << "Error al abrir el archivo de base de datos." << endl;
+    }
+}
+
+// Función para editar la información de un juego en la estructura de datos
+void editGameInformationInMemory(Game &gameToEdit)
+{
+    displayGameInformation(gameToEdit);
+
+    cout << "Ingrese la nueva información (o presione Enter para dejarla sin cambios):" << endl;
+
+    cin.ignore(); // Limpia el búfer
+
+    cout << "Nuevo nombre: ";
+    string newName;
+    getline(cin, newName);
+    if (!newName.empty())
+    {
+        gameToEdit.name = newName;
+    }
+
+    cout << "Nueva categoría: ";
+    string newCategory;
+    getline(cin, newCategory);
+    if (!newCategory.empty())
+    {
+        gameToEdit.category = newCategory;
+    }
+
+    cout << "Nuevo tamaño: ";
+    string newSize;
+    getline(cin, newSize);
+    if (!newSize.empty())
+    {
+        gameToEdit.size = newSize;
+    }
+
+    cout << "Nuevo precio: ";
+    string newPriceInput;
+    getline(cin, newPriceInput);
+    if (!newPriceInput.empty())
+    {
+        gameToEdit.price = stof(newPriceInput);
+    }
+
+    cout << "Nuevas licencias disponibles: ";
+    string newLicensesAvailableInput;
+    getline(cin, newLicensesAvailableInput);
+    if (!newLicensesAvailableInput.empty())
+    {
+        gameToEdit.licenciasDisponibles = stoi(newLicensesAvailableInput);
+    }
+
+    cout << "Nuevas licencias vendidas: ";
+    string newLicensesSoldInput;
+    getline(cin, newLicensesSoldInput);
+    if (!newLicensesSoldInput.empty())
+    {
+        gameToEdit.licenciasVendidas = stoi(newLicensesSoldInput);
+    }
+
+    cout << "Nueva imagen: ";
+    string newImagen;
+    cin.ignore(); // Limpiar el búfer antes de ingresar la imagen
+    getline(cin, newImagen);
+    if (!newImagen.empty())
+    {
+        gameToEdit.imagen = newImagen;
+    }
+
+    cout << "La información del juego se ha actualizado exitosamente." << endl;
+
+    // Actualizar la información en la base de datos
+    updateGameInDatabase(gameToEdit);
+}
+
+// Función principal para editar la información de un juego
+void editVideogameInformation()
+{
+    string gameID;
+    cout << "Ingrese el ID del juego que desea editar: ";
+    cin >> gameID;
+
+    // Buscar el juego por su ID
+    bool found = false;
+    for (int i = 0; i < games.size(); i++)
+    {
+        if (games[i].id == gameID)
+        {
+            found = true;
+            Game &gameToEdit = games[i];
+            editGameInformationInMemory(gameToEdit);
+            break;
+        }
+    }
+
+    if (!found)
+    {
+        cout << "No se encontró un juego con el ID proporcionado." << endl;
+    }
+}
+
+
+
 
 void uploadGameUpdates(){
 
@@ -389,13 +523,13 @@ void checkArchive()
         baseDatos.open("Base_Datos_AppStore.txt", ios::out);
 
         //baseDatos << "Name,ID,Category,Size,Price,LicenciasDisponibles,LicenciasVendidas,Imagen" << endl;
-        baseDatos << "Dont Satve,DS001,Aventura,1GB,4.99,100,50,Image1.jpg" << endl;
-        baseDatos << "Starfield,SF002,Rol,125GB,59.99,200,100,Image2.jpg" << endl;
-        baseDatos << "The Legend of Zelda: Breath of the Wild,ZL003,Aventura,13.4GB,59.99,500,250,Image3.jpg" << endl;
-        baseDatos << "Red Dead Redemption 2,RD004,Acción,105GB,49.99,400,200,Image4.jpg" << endl;
-        baseDatos << "The Elder Scrolls V: Skyrim,TS005,RPG,25GB,19.99,600,300,Image5.jpg" << endl;
-        baseDatos << "Cyber Shadow,CS006,Plataforma,1GB,14.99,100,50,Image6.jpg" << endl;
-        baseDatos << "Outer Worlds 2,OW007,RPG,35GB,49.99,400,200,Image7.jpg" << endl;
+        baseDatos << "Dont Satve,DS001,Accion,1GB,4.99,100,50,Image1.jpg" << endl;
+        baseDatos << "Starfield,SF002,Accion,125GB,59.99,200,100,Image2.jpg" << endl;
+        baseDatos << "The Legend of Zelda: Breath of the Wild,ZL003,Rompecabezas,13.4GB,59.99,500,250,Image3.jpg" << endl;
+        baseDatos << "Red Dead Redemption 2,RD004,Accion,105GB,49.99,400,200,Image4.jpg" << endl;
+        baseDatos << "The Elder Scrolls V: Skyrim,TS005,Accion,25GB,19.99,600,300,Image5.jpg" << endl;
+        baseDatos << "Cyber Shadow,CS006,Rompecabezas,1GB,14.99,100,50,Image6.jpg" << endl;
+        baseDatos << "Outer Worlds 2,OW007,Accion,35GB,49.99,400,200,Image7.jpg" << endl;
 
         baseDatos.close();
         fstream baseDatos("Base_Datos_AppStore.txt", ios::in);
