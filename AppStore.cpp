@@ -19,6 +19,7 @@ string spacesToPrint;
 char uSure;
 const char LIMIT = ',';
 
+
 class Game
 {
     public:
@@ -48,14 +49,22 @@ void optionFail();
 /*void checkUpper();*/
 
 //Developer Functions
-void uploadGame();
-void updateGameInDatabase();
-void editGameInformationInMemory();
-void editVideogameInformation();
-void uploadGameUpdates();
-void viewGameSales();
-void generateUniqueID();
-void displayGameInformation();
+    // Subir 
+        void uploadGame();
+        void updateGameInDatabase();
+        void generateUniqueID();
+    //Editar 
+        void editGameInformationInMemory();
+        void editVideogameInformation();
+        void displayGameInformation();
+    //Actualizar 
+        void uploadGameUpdates();
+        void updateGame(Game &gameToUpdate, const string &updateVersion, const string &updateDescription);
+        void displayUpdateInfo(const Game &gameToUpdate, const string &updateVersion, const string &updateDescription);
+    //Ver
+        void viewGameSales();
+
+
 
 int main() {
     checkArchive();
@@ -247,6 +256,7 @@ void menuAdmin()
             }
         } while (optionMenu!=7);
     }
+    //OBLIGATORIA
 void menuDeveloper()
 {
     cout<<"Hello World Developer"<<endl;
@@ -285,24 +295,31 @@ void menuDeveloper()
         } while (developerOption != 0);
 }
 
+//OBLIGATORIA
+// Función para generar una ID única para un juego y asignarla a newGame
 void generateUniqueID(Game &newGame)
 {
+    // Inicializa un generador de números pseudoaleatorios con una semilla basada en el tiempo actual
     mt19937 rng(static_cast<unsigned int>(time(nullptr)));
 
-    uniform_int_distribution<int> dist(1000, 9999); // Rango de ID
+    // Crea una distribución uniforme de enteros en el rango [1000, 9999]
+    uniform_int_distribution<int> dist(1000, 9999);
 
+    // Genera una ID única usando la distribución y el generador de números aleatorios
     int uniqueID = dist(rng);
 
+    // Convierte la ID única en una cadena y la asigna al juego
     newGame.id = to_string(uniqueID);
     cout << "La ID designada es: " << newGame.id << endl;
 }
 
+//OBLIGATORIA
 void uploadGame()
 {
     Game newGame;
 
     cout << "Ingrese el nombre del juego: ";
-    cin.ignore();
+    cin.ignore(); // Ignora cualquier entrada pendiente en el búfer
     getline(cin, newGame.name);
 
     cout << "Ingrese la categoría del juego (Rompecabezas, acción o deporte): ";
@@ -320,7 +337,7 @@ void uploadGame()
     newGame.licenciasVendidas = 0;
 
     cout << "Ingrese el nombre del archivo de imagen del juego: ";
-    cin.ignore();
+    cin.ignore(); // Ignora cualquier entrada pendiente en el búfer
     getline(cin, newGame.imagen);
 
     // Generar la ID única y asignarla al juego
@@ -345,6 +362,8 @@ void uploadGame()
     }
 }
 
+//OBLIGATORIA
+// Función para mostrar la información de un juego
 void displayGameInformation(const Game &game)
 {
     cout << "Información actual del juego:" << endl;
@@ -357,100 +376,117 @@ void displayGameInformation(const Game &game)
     cout << "Imagen: " << game.imagen << endl;
 }
 
-
+//OBLIGATORIA
 // Función para editar la información de un juego en la base de datos
 void updateGameInDatabase(const Game &gameToUpdate)
 {
+    // Abre el archivo de base de datos en modo de escritura
     ofstream baseDatos("Base_Datos_AppStore.txt");
     if (baseDatos.is_open())
     {
+        // Recorre la lista de juegos para actualizar la base de datos
         for (const Game &game : games)
         {
+            // Escribe la información del juego en el archivo, separando los campos por comas
             baseDatos << game.name << "," << game.id << "," << game.category << ","
-                      << game.size << "," << game.price << ","
-                      << game.licenciasDisponibles << "," << game.licenciasVendidas << ","
-                      << game.imagen << endl;
+                        << game.size << "," << game.price << ","
+                        << game.licenciasDisponibles << "," << game.licenciasVendidas << ","
+                        << game.imagen << endl;
         }
+
+        // Cierra el archivo después de escribir la información actualizada
         baseDatos.close();
     }
     else
     {
+        // Muestra un mensaje de error si no se pudo abrir el archivo
         cout << "Error al abrir el archivo de base de datos." << endl;
     }
 }
 
+//OPCIONAL / MODIFICABLE
 // Función para editar la información de un juego en la estructura de datos
 void editGameInformationInMemory(Game &gameToEdit)
 {
+    // Muestra la información actual del juego
     displayGameInformation(gameToEdit);
 
+    // Solicita al usuario que ingrese la nueva información (o presione Enter para dejarla sin cambios)
     cout << "Ingrese la nueva información (o presione Enter para dejarla sin cambios):" << endl;
 
-    cin.ignore(); // Limpia el búfer
+    cin.ignore(); // Limpia el búfer del teclado
 
+    // Solicita al usuario ingresar el nuevo nombre del juego
     cout << "Nuevo nombre: ";
     string newName;
     getline(cin, newName);
     if (!newName.empty())
     {
-        gameToEdit.name = newName;
+        gameToEdit.name = newName; // Actualiza el nombre si se proporciona uno nuevo
     }
 
+    // Solicita al usuario ingresar la nueva categoría del juego
     cout << "Nueva categoría: ";
     string newCategory;
     getline(cin, newCategory);
     if (!newCategory.empty())
     {
-        gameToEdit.category = newCategory;
+        gameToEdit.category = newCategory; // Actualiza la categoría si se proporciona una nueva
     }
 
+    // Solicita al usuario ingresar el nuevo tamaño del juego
     cout << "Nuevo tamaño: ";
     string newSize;
     getline(cin, newSize);
     if (!newSize.empty())
     {
-        gameToEdit.size = newSize;
+        gameToEdit.size = newSize; // Actualiza el tamaño si se proporciona uno nuevo
     }
 
+    // Solicita al usuario ingresar el nuevo precio del juego
     cout << "Nuevo precio: ";
     string newPriceInput;
     getline(cin, newPriceInput);
     if (!newPriceInput.empty())
     {
-        gameToEdit.price = stof(newPriceInput);
+        gameToEdit.price = stof(newPriceInput); // Actualiza el precio si se proporciona uno nuevo
     }
 
+    // Solicita al usuario ingresar la nueva cantidad de licencias disponibles
     cout << "Nuevas licencias disponibles: ";
     string newLicensesAvailableInput;
     getline(cin, newLicensesAvailableInput);
     if (!newLicensesAvailableInput.empty())
     {
-        gameToEdit.licenciasDisponibles = stoi(newLicensesAvailableInput);
+        gameToEdit.licenciasDisponibles = stoi(newLicensesAvailableInput); // Actualiza las licencias disponibles si se proporcionan nuevas
     }
 
+    // Solicita al usuario ingresar la nueva cantidad de licencias vendidas
     cout << "Nuevas licencias vendidas: ";
     string newLicensesSoldInput;
     getline(cin, newLicensesSoldInput);
     if (!newLicensesSoldInput.empty())
     {
-        gameToEdit.licenciasVendidas = stoi(newLicensesSoldInput);
+        gameToEdit.licenciasVendidas = stoi(newLicensesSoldInput); // Actualiza las licencias vendidas si se proporcionan nuevas
     }
 
+    // Solicita al usuario ingresar el nuevo nombre del archivo de imagen del juego
     cout << "Nueva imagen: ";
     string newImagen;
-    cin.ignore(); // Limpiar el búfer antes de ingresar la imagen
+    cin.ignore(); // Limpia el búfer antes de ingresar la imagen
     getline(cin, newImagen);
     if (!newImagen.empty())
     {
-        gameToEdit.imagen = newImagen;
+        gameToEdit.imagen = newImagen; // Actualiza el nombre de la imagen si se proporciona uno nuevo
     }
 
     cout << "La información del juego se ha actualizado exitosamente." << endl;
 
-    // Actualizar la información en la base de datos
+    // Actualiza la información en la base de datos
     updateGameInDatabase(gameToEdit);
 }
 
+//OPCIONAL
 // Función principal para editar la información de un juego
 void editVideogameInformation()
 {
@@ -466,7 +502,105 @@ void editVideogameInformation()
         {
             found = true;
             Game &gameToEdit = games[i];
+
+            // Llama a editGameInformationInMemory para editar la información del juego encontrado
             editGameInformationInMemory(gameToEdit);
+            break;
+        }
+    }
+
+    if (!found)
+    {
+        cout << "No se encontró un juego con el ID proporcionado." << endl;
+    }
+}
+
+//OPCIONABLE
+// Función para subir actualizaciones de un juego
+void uploadGameUpdates()
+{
+    string gameID;
+    cout << "Ingrese el ID del juego para el cual desea subir una actualización: ";
+    cin >> gameID;
+
+    bool found = false;
+    for (int i = 0; i < games.size(); i++)
+    {
+        if (games[i].id == gameID)
+        {
+            found = true;
+            Game &gameToUpdate = games[i];
+
+            // Parte 3: Entrada de detalles de la actualización
+            string updateDescription;
+            cout << "Ingrese una breve descripción de la actualización: ";
+            cin.ignore();
+            getline(cin, updateDescription);
+
+            string updateVersion;
+            cout << "Ingrese la versión de la actualización: ";
+            getline(cin, updateVersion);
+
+            // Llama a updateGame para aplicar la actualización
+            updateGame(gameToUpdate, updateVersion, updateDescription);
+
+            // Muestra información sobre la actualización subida
+            displayUpdateInfo(gameToUpdate, updateVersion, updateDescription);
+
+            break;
+        }
+    }
+
+    if (!found)
+    {
+        cout << "No se encontró un juego con el ID proporcionado." << endl;
+    }
+}
+
+//OPCIONABLE
+// Función para aplicar una actualización a un juego
+void updateGame(Game &gameToUpdate, const string &updateVersion, const string &updateDescription)
+{
+    // Modifica el nombre del juego para incluir la versión de la actualización
+    gameToUpdate.name += " - " + updateVersion;
+
+    // Cambia el tamaño del juego a "Updated" para indicar que ha sido actualizado
+    gameToUpdate.size = "Updated"; 
+
+    // Restablece la cantidad de licencias vendidas a 0 después de la actualización
+    gameToUpdate.licenciasVendidas = 0; 
+
+    // Cambia el nombre de la imagen del juego para reflejar la actualización
+    gameToUpdate.imagen = "UpdatedImage.jpg"; 
+
+    // Llama a updateGameInDatabase para reflejar los cambios en la base de datos
+    updateGameInDatabase(gameToUpdate);
+}
+
+//OPCIONAL
+// Función para mostrar información de una actualización
+void displayUpdateInfo(const Game &gameToUpdate, const string &updateVersion, const string &updateDescription)
+{
+    cout << "La actualización se ha subido exitosamente para el juego: " << gameToUpdate.name << endl;
+    cout << "Versión de la actualización: " << updateVersion << endl;
+    cout << "Descripción de la actualización: " << updateDescription << endl;
+}
+
+//OPCIONAL
+// Función para ver las ventas de un juego
+void viewGameSales()
+{
+    string gameId;
+    cout << "Ingrese el ID del juego del que desea ver las ventas: ";
+    cin >> gameId;
+
+    bool found = false;
+    for (const Game &game : games)
+    {
+        if (game.id == gameId)
+        {
+            found = true;
+            cout << "Ventas del juego '" << game.name << "' (ID: " << gameId << "): " << game.licenciasVendidas << endl;
             break;
         }
     }
@@ -479,14 +613,6 @@ void editVideogameInformation()
 
 
 
-
-void uploadGameUpdates(){
-
-}
-
-void viewGameSales(){
-
-}
 
 
 void checkArchive()
