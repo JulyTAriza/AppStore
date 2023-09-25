@@ -5,37 +5,59 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <bits/stdc++.h>
 using namespace std;
 
 vector<vector<string>> content;
+vector<vector<string>> passwordsVector;
 vector<string> row;
 string line, word;
 
 int optionMenu, inputPassword, passwordAux, password[2], limitShow;
+float sales, salesAUX;
 string spacesToPrint;
 char uSure;
+const char LIMIT = ',';
 
-class game
+class Game
 {
     public:
         string name;
+        string id;
         string category;
-        unsigned int id;
-        unsigned int price;
-        unsigned int size;
-        unsigned int totalLicencias;
+        string size;
+        float price;
+        unsigned int licenciasDisponibles;
         unsigned int licenciasVendidas;
+        string imagen;
+        bool compradoPorUsuario;
+        Game() : compradoPorUsuario(false) {}
 };
+
+struct User {
+    std::string username;
+    int age;
+    std::string email;
+    std::string password;
+};
+
+vector<Game> games;
+Game videoGame;
 
 void showGames();
 void menuUser();
 void menuAdmin();
+void menuSales();
+void menuTopSales();
 void menuDeveloper();
+void menuComprar();
 
 void checkArchive();
 void rewriteArchive();
 void optionFail();
 /*void checkUpper();*/
+string Login();
+void RegisterUser();
 
 int main() {
     checkArchive();
@@ -88,7 +110,7 @@ int main() {
             cin >> uSure;
             if (uSure == 's' || uSure == 'S')
             {
-                rewriteArchive();
+                //rewriteArchive();
                 break;
             }
             else
@@ -107,15 +129,178 @@ int main() {
     
     return 0;
 }
-
-void showGames()
+void menuComprar()
 {
+    cout << "--- --- ---  Comprar Licencias  --- --- ---" << endl << endl;
+    cout << "Lista de juegos disponibles para comprar:" << endl;
 
+    for (int i = 0; i < games.size(); i++)
+    {
+        Game& currentGame = games[i];
+        cout << i + 1 << ". " << currentGame.name << " (ID: " << currentGame.id << ")" << endl;
+    }
+
+    int gameChoice;
+    cout << "Seleccione el juego que desea comprar (ingrese el número): ";
+    cin >> gameChoice;
+
+    // Verificar si la elección está dentro del rango válido
+    if (gameChoice >= 1 && gameChoice <= games.size())
+    {
+        Game& selectedGame = games[gameChoice - 1];
+
+        if (selectedGame.licenciasDisponibles > 0)
+        {
+            // Realizar la compra
+            selectedGame.licenciasVendidas++;
+            selectedGame.licenciasDisponibles--;
+
+            cout << "Licencia comprada con éxito para el juego: " << selectedGame.name << endl;
+        }
+        else
+        {
+            cout << "No quedan licencias disponibles para el juego seleccionado." << endl;
+        }
+    }
+    else
+    {
+        cout << "Opción no válida. Por favor, seleccione un número de juego válido." << endl;
+    }
+
+    cout << "Presione Enter para continuar...";
+    cin.ignore(); // Limpiar el búfer de entrada
+    cin.get();    // Esperar a que el usuario presione Enter
 }
-void menuUser()
-{
-    cout<<"Hello World User"<<endl;
+
+
+void showGames() {
+    cout << "Lista de juegos disponibles:" << endl;
+
+    for (int i = 0; i < games.size(); i++) {
+        cout << i + 1 << ". " << games[i].name << " (ID: " << games[i].id << ")" << endl;
+    }
 }
+
+void menuUser() {
+    cout << "Bienvenido" << endl;
+    string username; 
+
+    while (true) {
+        cout << "1. Registrarse\n";
+        cout << "2. Iniciar sesión\n";
+        cout << "3. Salir\n";
+        int choice;
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                RegisterUser();
+                break;
+            case 2:
+                username = Login(); 
+                if (!username.empty()) {
+                    cout << "Usuario: " << username << endl; 
+                    showGames(); 
+
+                    while (true) {
+                        cout << "1. Comprar un juego\n";
+                        cout << "2. Cerrar sesión y salir\n";
+                        int innerChoice;
+                        cin >> innerChoice;
+
+                        switch (innerChoice) {
+                            case 1:
+                                //  lógica para la compra de un juego, mas adelante 
+                                break;
+                            case 2:
+                                cout << "Cerrando sesión y saliendo.\n";
+                                return;
+                            default:
+                                cout << "Opción inválida. Intente de nuevo.\n";
+                                break;
+                        }
+                    }
+                }
+                break;
+            case 3:
+                cout << "Saliendo del menú de usuario.\n";
+                return;
+            default:
+                cout << "Opción inválida. Intente de nuevo.\n";
+                break;
+        }
+    }
+}
+
+
+void RegisterUser() {
+    User newUser;
+    
+    std::cout << "Ingrese nombre de usuario: ";
+    std::cin >> newUser.username;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  
+    
+    std::cout << "Ingrese edad: ";
+    std::cin >> newUser.age;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  
+    
+    std::cout << "Ingrese correo electrónico: ";
+    std::cin >> newUser.email;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  
+    
+    std::cout << "Ingrese contraseña: ";
+    std::cin >> newUser.password;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  
+    
+    
+    std::ofstream outFile("usuarios.txt", std::ios::app);
+    
+    if (!outFile.is_open()) {
+        std::cerr << "No se pudo abrir el archivo para escritura." << std::endl;
+        return;
+    }
+    
+    outFile << newUser.username << " " << newUser.age << " " << newUser.email << " " << newUser.password << std::endl;
+    
+    outFile.close();
+    
+    std::cout << "Usuario registrado exitosamente.\n";
+}
+
+string Login() {
+    std::string username, password;
+
+    std::cout << "Ingrese nombre de usuario: ";
+    std::cin >> username;
+
+    std::cout << "Ingrese contraseña: ";
+    std::cin >> password;
+
+    std::ifstream inFile("usuarios.txt");
+
+    if (!inFile.is_open()) {
+        std::cerr << "No se pudo abrir el archivo para lectura." << std::endl;
+        return ""; 
+    }
+
+    std::string line;
+    while (std::getline(inFile, line)) {
+        std::istringstream iss(line);
+        User user;
+        if (iss >> user.username >> user.age >> user.email >> user.password) {
+            if (user.username == username && user.password == password) {
+                std::cout << " ¡Bienvenido!" << user.username << "!\n";
+                inFile.close();
+                return user.username;
+            }
+        }
+    }
+
+    inFile.close();
+    std::cout << "Nombre de usuario o contraseña incorrectos. Intente de nuevo.\n";
+    return ""; 
+}
+
 void menuAdmin()
 {
     do
@@ -130,13 +315,39 @@ void menuAdmin()
         switch (optionMenu)
         {
         case 1:
-            //Abre catalogo de juegos, publicados por el developer
+            menuComprar();
             break;
         case 2:
             //Abre catalgo de juegos ya comprados - de juegos de los que tiene licencia, si se acaban las licencias se va del caatalogo?
             break;
 
         case 3:
+            do
+            {
+                cout<<"--- --- ---  Ventas  --- --- ---"<<endl<<endl;
+                cout<<"1. Ventas Totales"<<endl;
+                cout<<"2. Top Juegos"<<endl;
+                cout<<"0. Salir del menu VENTAS"<<endl;
+                cin>>optionMenu;
+                optionFail();
+                switch (optionMenu)
+                {
+                    case 1:
+                        menuSales();
+                        optionMenu = 7;
+                        break;
+                    case 2:
+                        menuTopSales();
+                        optionMenu = 7;
+                        break;
+                    case 0:
+                        optionMenu = 7;
+                        break;
+                    default:
+                        cout<<"Esa opcion no esta disponible"<<endl;
+                        break;
+                }
+            } while (optionMenu!=7);
             break;
 
         case 0:
@@ -147,6 +358,55 @@ void menuAdmin()
         }
     } while (optionMenu!=0);
 }
+    void menuSales()
+    {
+        do
+        {
+            cout<<"--- --- ---  Ventas Totales  --- --- ---"<<endl<<endl;
+            for (int i = 0; i < games.size(); i++)
+            {
+                videoGame = games[i];
+                salesAUX = videoGame.price * videoGame.licenciasVendidas;
+                sales = sales + salesAUX;
+            }
+            cout <<"El total de las ventas es de: $"<<sales<<endl<<endl;
+            sales = 0;
+            
+            cout<<"0. Salir de Ventas Totales"<<endl;
+            cin>>optionMenu;
+            optionFail();
+            switch (optionMenu)
+            {
+                case 0:
+                    optionMenu=7;
+                    break;
+                default:
+                    cout<<"Esa opcion no esta disponible"<<endl;
+                    break;
+            }
+        } while (optionMenu!=7);
+        
+    }
+    void menuTopSales()
+    {
+        do
+        {
+            cout<<"--- --- ---  Top Juegos Vendidos  --- --- ---"<<endl<<endl;
+            //sort(content.begin(), content.end(), greater<int>());
+            cout<<"0. Salir de Top Juegos"<<endl;
+            cin>>optionMenu;
+            optionFail();
+            switch (optionMenu)
+            {
+                case 0:
+                    optionMenu=7;
+                    break;
+                default:
+                    cout<<"Esa opcion no esta disponible"<<endl;
+                    break;
+            }
+        } while (optionMenu!=7);
+    }
 void menuDeveloper()
 {
     cout<<"Hello World Developer"<<endl;
@@ -158,24 +418,36 @@ void checkArchive()
 	fstream baseDatos("Base_Datos_AppStore.txt", ios::in);
     if (baseDatos.is_open())
     {
-        while (getline(baseDatos, line))
-        {
-            row.clear();
-
-            stringstream str(line);
-
-            while (getline(str, word, ','))
-                row.push_back(word);
-            	content.push_back(row);
-        }
+        string linea, name, id, category, size, price, licenciasDisponibles, licenciasVendidas, imagen, sales;
+    	while (getline(baseDatos, linea))
+    	{
+    		stringstream input_stringstream(linea);
+    		getline(input_stringstream, name, LIMIT);
+    		getline(input_stringstream, id, LIMIT);
+    		getline(input_stringstream, category, LIMIT);
+    		getline(input_stringstream, size, LIMIT);
+    		getline(input_stringstream, price, LIMIT);
+    		getline(input_stringstream, licenciasDisponibles, LIMIT);
+    		getline(input_stringstream, licenciasVendidas, LIMIT);
+    		getline(input_stringstream, imagen, LIMIT);
+    		videoGame.name = name;
+    		videoGame.id = id;
+    		videoGame.category = category;
+    		videoGame.size = size;
+    		videoGame.price = stof(price);
+    		videoGame.licenciasDisponibles = stoi(licenciasDisponibles);
+    		videoGame.licenciasVendidas = stoi(licenciasVendidas);
+    		videoGame.imagen = imagen;
+    		
+    		games.push_back(videoGame);
+    	}
     }
     else
     {
         baseDatos.open("Base_Datos_AppStore.txt", ios::out);
 
-        baseDatos << "Name,ID,Category,Size,Price,LicenciasDisponibles,LicenciasVendidas,Imagen" << endl;
-
-        baseDatos << "Dont Starve,DS001,Aventura,1GB,4.99,100,50,Image1.jpg" << endl;
+        //baseDatos << "Name,ID,Category,Size,Price,LicenciasDisponibles,LicenciasVendidas,Imagen" << endl;
+        baseDatos << "Dont Satve,DS001,Aventura,1GB,4.99,100,50,Image1.jpg" << endl;
         baseDatos << "Starfield,SF002,Rol,125GB,59.99,200,100,Image2.jpg" << endl;
         baseDatos << "The Legend of Zelda: Breath of the Wild,ZL003,Aventura,13.4GB,59.99,500,250,Image3.jpg" << endl;
         baseDatos << "Red Dead Redemption 2,RD004,Acción,105GB,49.99,400,200,Image4.jpg" << endl;
@@ -183,11 +455,39 @@ void checkArchive()
         baseDatos << "Cyber Shadow,CS006,Plataforma,1GB,14.99,100,50,Image6.jpg" << endl;
         baseDatos << "Outer Worlds 2,OW007,RPG,35GB,49.99,400,200,Image7.jpg" << endl;
 
-
         baseDatos.close();
         fstream baseDatos("Base_Datos_AppStore.txt", ios::in);
+        string linea, name, id, category, size, price, licenciasDisponibles, licenciasVendidas, imagen, sales;
+        while (getline(baseDatos, linea))
+    	{
+    		stringstream input_stringstream(linea);
+    		getline(input_stringstream, name, LIMIT);
+    		getline(input_stringstream, id, LIMIT);
+    		getline(input_stringstream, category, LIMIT);
+    		getline(input_stringstream, size, LIMIT);
+    		getline(input_stringstream, price, LIMIT);
+    		getline(input_stringstream, licenciasDisponibles, LIMIT);
+    		getline(input_stringstream, licenciasVendidas, LIMIT);
+    		getline(input_stringstream, imagen, LIMIT);
+    		videoGame.name = name;
+    		videoGame.id = id;
+    		videoGame.category = category;
+    		videoGame.size = size;
+    		videoGame.price = stof(price);
+    		videoGame.licenciasDisponibles = stoi(licenciasDisponibles);
+    		videoGame.licenciasVendidas = stoi(licenciasVendidas);
+    		videoGame.imagen = imagen;
+    		
+    		games.push_back(videoGame);
+    	}
+    }
 
-        while (getline(baseDatos, line))
+    baseDatos.close();
+    
+	fstream basePasswords("Passwords.txt", ios::in);
+    if (basePasswords.is_open())
+    {
+        while (getline(basePasswords, line))
         {
             row.clear();
 
@@ -195,16 +495,35 @@ void checkArchive()
 
             while (getline(str, word, ','))
                 row.push_back(word);
-            	content.push_back(row);
+            	passwordsVector.push_back(row);
+        }
+    }
+    else
+    {
+        basePasswords.open("Passwords.txt", ios::out);
+
+        basePasswords <<"Passwords,0,0,\n";
+
+        basePasswords.close();
+        fstream basePasswords("Passwords.txt", ios::in);
+
+        while (getline(basePasswords, line))
+        {
+            row.clear();
+
+            stringstream str(line);
+
+            while (getline(str, word, ','))
+                row.push_back(word);
+            	passwordsVector.push_back(row);
         }
     }
 
-    baseDatos.close();
-
+    basePasswords.close();
     std::string::size_type sz;
-	passwordAux = stoi(content[8][1], &sz);
+	passwordAux = stoi(passwordsVector[0][1], &sz);
 	password[0] = passwordAux;
-	passwordAux = stoi(content[8][2], &sz);
+	passwordAux = stoi(passwordsVector[0][2], &sz);
 	password[1] = passwordAux;
 
 }
