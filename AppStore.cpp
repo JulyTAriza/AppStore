@@ -155,11 +155,11 @@ void menuAdmin()
         case 3:
             do
             {
-                cout<<"--- --- ---  Ventas  --- --- ---"<<endl<<endl;
-                cout<<"1. Ventas Totales"<<endl;
-                cout<<"2. Top Juegos"<<endl;
-                cout<<"0. Salir del menu VENTAS"<<endl;
-                cin>>optionMenu;
+                cout<<"--- --- ---  Ventas  --- --- ---"<<endl<<endl;//Anuncio de que se encuentra en el menú de Ventas
+                cout<<"1. Ventas Totales"<<endl; //Opción de menú 1.
+                cout<<"2. Top Juegos"<<endl; //Opción de menú 2.
+                cout<<"0. Salir del menu VENTAS"<<endl; //Opcción de menú para salir 0.
+                cin>>optionMenu; 
                 optionFail();
                 switch (optionMenu)
                 {
@@ -235,15 +235,15 @@ void menuAdmin()
     {
         do
         {
-            cout<<"--- --- ---  Ventas Totales  --- --- ---"<<endl<<endl;
+            cout<<"--- --- ---  Ventas Totales  --- --- ---"<<endl<<endl;//Hace falta explicar?
             for (int i = 0; i < games.size(); i++)
             {
-                videoGame = games[i];
-                salesAUX = videoGame.price * videoGame.licenciasVendidas;
-                sales = sales + salesAUX;
+                videoGame = games[i]; //va recorrienda un vector "games", luego lo iguala al objeto "videoGame"
+                salesAUX = videoGame.price * videoGame.licenciasVendidas; //Una vez igualado multiplica el total de licencias por el precio y lo guarda en un auxiliar
+                sales = sales + salesAUX; //Suma sales más el auxiliar
             }
             cout <<"El total de las ventas es de: $"<<sales<<endl<<endl;
-            sales = 0;
+            sales = 0; //Asigna 0 a sales para que la próxima vez que se revisen las ventas no vuelva a sumar todo, sino que empiece en 0
             
             cout<<"0. Salir de Ventas Totales"<<endl;
             cin>>optionMenu;
@@ -251,7 +251,7 @@ void menuAdmin()
             switch (optionMenu)
             {
                 case 0:
-                    optionMenu=7;
+                    optionMenu=7; //Se asigna 7 para que no interfiera con menus anteriores...
                     break;
                 default:
                     cout<<"Esa opcion no esta disponible"<<endl;
@@ -260,7 +260,7 @@ void menuAdmin()
         } while (optionMenu!=7);
         
     }
-    void menuTopSales()
+    void menuTopSales() //Sigue estando en construcción
     {
         do
         {
@@ -280,6 +280,7 @@ void menuAdmin()
             }
         } while (optionMenu!=7);
     }
+    //Dejar estas funciones un espacio más adentro, señal de que son funciones relacionadas al "menuAdmin"
 void menuDeveloper()
 {
     cout<<"Hello World Developer"<<endl;
@@ -311,7 +312,7 @@ void checkArchive()
     		videoGame.licenciasDisponibles = stoi(licenciasDisponibles);
     		videoGame.licenciasVendidas = stoi(licenciasVendidas);
     		videoGame.imagen = imagen;
-    		
+    		//lo saque de internet.. No sé cómo explicarlo en texto pero funciona :)
     		games.push_back(videoGame);
     	}
     }
@@ -357,7 +358,7 @@ void checkArchive()
 
     baseDatos.close();
     
-	fstream basePasswords("Passwords.txt", ios::in);
+	fstream basePasswords("Passwords.txt", ios::in);//Sistema de contraseñas
     if (basePasswords.is_open())
     {
         while (getline(basePasswords, line))
@@ -400,7 +401,7 @@ void checkArchive()
 	password[1] = passwordAux;
 
 }
-void rewriteArchive()
+void rewriteArchive()//Está en des uso, por el momento registraría un vector, no una clase
 {
 	ofstream baseDatos;
 
@@ -425,7 +426,7 @@ void rewriteArchive()
 
     baseDatos.close();	
 }
-void optionFail()
+void optionFail()//Si ingresan una opción incorrecta no rompe el código
 {
 	if (cin.fail())
     {
