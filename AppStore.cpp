@@ -282,7 +282,7 @@ void menuAdmin()
         switch (optionMenu)
         {
         case 1:
-            menuUser();
+            menuComprar();
             optionMenu=7;
           
             break;
@@ -781,10 +781,6 @@ void viewGameSales()
         cout << "No se encontró un juego con el ID proporcionado." << endl;
     }
 }
-
-
-
-
 
 void checkArchive()
 {
