@@ -41,6 +41,7 @@ Game videoGame;
 void showGames();
 void menuUser();
 void menuAdmin();
+void menuComprar();
 void menuDeveloper();
 void menuSales();
 void menuTopSales();
