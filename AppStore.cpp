@@ -6,6 +6,8 @@
 #include <vector>
 #include <sstream>
 #include <bits/stdc++.h>
+#include <algorithm>
+#include <functional>
 using namespace std;
 
 const char LIMIT = ',';
@@ -152,7 +154,9 @@ void showGames()
         }//Pendiente de mostrar más info
 }
 void menuUser() {
-    cout << "Bienvenido" << endl;
+    cout << "---------------------------------------------------" << endl;
+    cout << "            Bienvenido    " << endl;
+    cout << "---------------------------------------------------" << endl << endl;
     string username; 
 
     while (true) {
@@ -417,12 +421,39 @@ void menuAdmin()
     }
     void menuTopSales()
     {
+        unsigned int topAux[games.size()];
         do
         {
              cout << "---------------------------------------------------" << endl;
              cout << "            TOP JUEGOS VENDIDOS    " << endl;
              cout << "---------------------------------------------------" << endl << endl;
             
+            for (int i = 0; i < games.size(); i++)
+            {
+                    videoGame = games[i]; //va recorrienda un vector "games", luego lo iguala al objeto "videoGame"
+                    topAux[i]= videoGame.licenciasVendidas; //Una vez igualado multiplica el total de licencias por el precio y lo guarda en un auxiliar
+                
+            }
+
+            for (int i = 0; i < games.size()-1; i++)
+            {
+                videoGame = games[i];
+                for (int j = 0; j < games.size() - i - 1; j++)
+                {
+                if (topAux[j] > topAux[j + 1]){
+                    swap(topAux[j], topAux[j + 1]);
+                    swap(games[j], games[j + 1]);
+                }
+                if (i == games.size()-2)
+                {
+                    cout << "1. " << games[games.size()-1].name << " (ID: " << games[games.size()-1].id << ")"<< " con: " << topAux[games.size()-1]<< " ventas " << endl;
+                    cout << "2. " << games[games.size()-2].name << " (ID: " << games[games.size()-2].id << ")"<< " con: " << topAux[games.size()-2]<< " ventas " << endl;
+                    cout << "3. " << games[games.size()-3].name << " (ID: " << games[games.size()-3].id << ")"<< " con: " << topAux[games.size()-3]<< " ventas " << endl;
+
+                }
+                }
+            }
+
             cout<<"0. Salir de Top Juegos"<<endl;
             cin>>optionMenu;
             optionFail();
