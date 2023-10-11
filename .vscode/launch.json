@@ -8,8 +8,13 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
+<<<<<<< HEAD
       "cwd": "c:/Users/galin/OneDrive/Documentos/Uni/3 semestre/AppStore/GitHub/AppStore",
       "program": "c:/Users/galin/OneDrive/Documentos/Uni/3 semestre/AppStore/GitHub/AppStore/build/Debug/outDebug",
+=======
+      "cwd": "c:/Users/USER/OneDrive/Documentos/GitHub/AppStore",
+      "program": "c:/Users/USER/OneDrive/Documentos/GitHub/AppStore/build/Debug/outDebug",
+>>>>>>> 143cd01203a469f2e17547c806b8a5cdb82ad57c
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
